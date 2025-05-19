@@ -5,7 +5,7 @@ Le but est de créer une application de covoiturages
 
 ## Lancer le projet
 ```bash
-docker-compose up --build
+docker compose up -d --build
 ```
 
 ## Authors
