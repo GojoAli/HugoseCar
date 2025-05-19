@@ -1,45 +1,44 @@
-version: '3.9'  # Version 3.9 pour utiliser depends_on avec condition: service_healthy
+version: '3.9' #Version 3.9 pour utiliser depends_on avec condition: service_healthy
 services:
-  # Service de base de données MySQL 8
+# Service de base de données MySQL 8
   db:
-    image: mysql:8.0       # Image MySQL (v8.x la plus récente)
+    image: mysql:8.0    # Image MySQL (v8.x la plus récente)
     container_name: hugosecar-db
     ports:
-      - "3306:3306"        # Expose le port MySQL 3306 vers l'hôte (optionnel en dev)
+      - "3306:3306"     # Expose le port MySQL 3306 vers l'hôte (optionnel en dev)
     environment:
-      - MYSQL_DATABASE=hugosecar    # Nom de la base de données initiale
-      - MYSQL_USER=user             # Nom d'utilisateur MySQL
-      - MYSQL_PASSWORD=password     # Mot de passe de l'utilisateur
-      - MYSQL_ROOT_PASSWORD=rootpassword  # Mot de passe root (administrateur)
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     volumes:
-      - db-data:/var/lib/mysql      # Volume nommé pour persister les données de la base
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro  # Script SQL d'init pour créer la table user
+      - db-data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uuser", "-ppassword"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${DB_USER}", "-p${DB_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
 
-  # Service application Java (Tomcat 10 + WAR Jakarta EE)
   app:
     build:
-      context: ./HugoseCar                 # Chemin vers le Dockerfile et le code source de l'application
-      dockerfile: Dockerfile         # Nom du Dockerfile (situé dans ./HugoseCar/)
+      context: ./HugoseCar
+      dockerfile: Dockerfile
     container_name: hugosecar-app
     depends_on:
       db:
-        condition: service_healthy   # Attend que 'db' soit sain (healthcheck OK) avant de démarrer:contentReference[oaicite:0]{index=0}
+        condition: service_healthy
     ports:
-      - "8080:8080"                 # Expose le port 8080 de Tomcat vers l'hôte
+      - "8080:8080"
     environment:
-      - DB_HOST=db                  # (Optionnel) Nom d'hôte de la DB à utiliser dans l'app (le service "db")
-      - DB_NAME=hugosecar          # (Optionnel) Nom de la base de données (doit correspondre à MYSQL_DATABASE)
-      - DB_USER=user                # (Optionnel) Utilisateur BD (doit correspondre à MYSQL_USER)
-      - DB_PASSWORD=password        # (Optionnel) Mot de passe BD (doit correspondre à MYSQL_PASSWORD)
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
     volumes:
-      - ~/.m2:/root/.m2             # Monte le cache Maven local pour accélérer les builds successifs
-      - ./logs:/usr/local/tomcat/logs # Monte les logs Tomcat sur l'hôte (pratique pour le développement)
+      - ~/.m2:/root/.m2
+      - ./logs:/usr/local/tomcat/logs
 
 volumes:
-  db-data:                          # Volume docker nommé pour la base de données (défini sans chemin host)
+  db-data:

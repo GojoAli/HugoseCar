@@ -7,10 +7,10 @@
 <body>
 <%
     // Récupération du nom d'utilisateur stocké dans la session
-    String username = (String) session.getAttribute("username");
-    if(username != null) {
+    String email = (String) session.getAttribute("email");
+    if(email != null) {
 %>
-    <h1>Bonjour, <%= username %> !</h1>
+    <h1>Bonjour!</h1>
     <p>Vous êtes connecté.</p>
 <%
     } else {
