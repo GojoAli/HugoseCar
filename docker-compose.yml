@@ -7,7 +7,7 @@ services:
     ports:
       - "3306:3306"        # Expose le port MySQL 3306 vers l'hôte (optionnel en dev)
     environment:
-      - MYSQL_DATABASE=tp_jakarta    # Nom de la base de données initiale
+      - MYSQL_DATABASE=hugosecar    # Nom de la base de données initiale
       - MYSQL_USER=user             # Nom d'utilisateur MySQL
       - MYSQL_PASSWORD=password     # Mot de passe de l'utilisateur
       - MYSQL_ROOT_PASSWORD=rootpassword  # Mot de passe root (administrateur)
@@ -34,7 +34,7 @@ services:
       - "8080:8080"                 # Expose le port 8080 de Tomcat vers l'hôte
     environment:
       - DB_HOST=db                  # (Optionnel) Nom d'hôte de la DB à utiliser dans l'app (le service "db")
-      - DB_NAME=tp_jakarta          # (Optionnel) Nom de la base de données (doit correspondre à MYSQL_DATABASE)
+      - DB_NAME=hugosecar          # (Optionnel) Nom de la base de données (doit correspondre à MYSQL_DATABASE)
       - DB_USER=user                # (Optionnel) Utilisateur BD (doit correspondre à MYSQL_USER)
       - DB_PASSWORD=password        # (Optionnel) Mot de passe BD (doit correspondre à MYSQL_PASSWORD)
     volumes:
