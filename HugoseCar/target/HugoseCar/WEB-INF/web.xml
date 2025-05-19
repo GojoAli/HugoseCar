@@ -2,6 +2,24 @@
  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
+
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+
+
+    <!-- Déclaration du Servlet de connexion secure -->
+  <servlet>
+    <servlet-name>sessionPageServlet</servlet-name>
+    <servlet-class>urca.dani.nico.servlets.sessionPage</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>sessionPageServlet</servlet-name>
+    <url-pattern>/sessionPage</url-pattern>
+  </servlet-mapping>
+
+
+    <!-- Définition de la page d'accueil (welcome file) -->
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
 </web-app>
