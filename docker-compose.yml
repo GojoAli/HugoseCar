@@ -1,1 +1,45 @@
-# TODO
+version: '3.9'  # Version 3.9 pour utiliser depends_on avec condition: service_healthy
+services:
+  # Service de base de données MySQL 8
+  db:
+    image: mysql:8.0       # Image MySQL (v8.x la plus récente)
+    container_name: hugosecar-db
+    ports:
+      - "3306:3306"        # Expose le port MySQL 3306 vers l'hôte (optionnel en dev)
+    environment:
+      - MYSQL_DATABASE=tp_jakarta    # Nom de la base de données initiale
+      - MYSQL_USER=user             # Nom d'utilisateur MySQL
+      - MYSQL_PASSWORD=password     # Mot de passe de l'utilisateur
+      - MYSQL_ROOT_PASSWORD=rootpassword  # Mot de passe root (administrateur)
+    volumes:
+      - db-data:/var/lib/mysql      # Volume nommé pour persister les données de la base
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro  # Script SQL d'init pour créer la table user
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uuser", "-ppassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Service application Java (Tomcat 10 + WAR Jakarta EE)
+  app:
+    build:
+      context: ./HugoseCar                 # Chemin vers le Dockerfile et le code source de l'application
+      dockerfile: Dockerfile         # Nom du Dockerfile (situé dans ./HugoseCar/)
+    container_name: hugosecar-app
+    depends_on:
+      db:
+        condition: service_healthy   # Attend que 'db' soit sain (healthcheck OK) avant de démarrer:contentReference[oaicite:0]{index=0}
+    ports:
+      - "8080:8080"                 # Expose le port 8080 de Tomcat vers l'hôte
+    environment:
+      - DB_HOST=db                  # (Optionnel) Nom d'hôte de la DB à utiliser dans l'app (le service "db")
+      - DB_NAME=tp_jakarta          # (Optionnel) Nom de la base de données (doit correspondre à MYSQL_DATABASE)
+      - DB_USER=user                # (Optionnel) Utilisateur BD (doit correspondre à MYSQL_USER)
+      - DB_PASSWORD=password        # (Optionnel) Mot de passe BD (doit correspondre à MYSQL_PASSWORD)
+    volumes:
+      - ~/.m2:/root/.m2             # Monte le cache Maven local pour accélérer les builds successifs
+      - ./logs:/usr/local/tomcat/logs # Monte les logs Tomcat sur l'hôte (pratique pour le développement)
+
+volumes:
+  db-data:                          # Volume docker nommé pour la base de données (défini sans chemin host)

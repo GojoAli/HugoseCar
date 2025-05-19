@@ -31,7 +31,7 @@ CREATE TABLE trajet (
 CREATE TABLE trajet_arret (
   id              INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   trajet_id       INT UNSIGNED            NOT NULL,
-  order           SMALLINT UNSIGNED       NOT NULL,
+  ordre           SMALLINT UNSIGNED       NOT NULL,
   point           VARCHAR(255)            NOT NULL,
   CONSTRAINT fk_arret_trajet
     FOREIGN KEY (trajet_id)
