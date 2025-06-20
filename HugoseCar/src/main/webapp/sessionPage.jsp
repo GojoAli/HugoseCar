@@ -20,5 +20,9 @@
 <%
     }
 %>
+
+<p><a href="trajet/editTrajet.jsp">Modifier un trajet</a></p>
+<p><a href="trajet/trajetList.jsp">Voir les trajets</a></p>
+
 </body>
 </html>
