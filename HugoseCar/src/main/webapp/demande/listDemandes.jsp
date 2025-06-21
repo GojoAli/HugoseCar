@@ -4,17 +4,13 @@
 
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Demandes de trajet</title>
-  <style>
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background-color: #f4f4f4; }
-    .actions form { display: inline; }
-  </style>
-</head>
+
+<jsp:include page="../components/header.jsp">
+    <jsp:param name="pageTitle" value="Demandes de Trajet"/>
+</jsp:include>
+
 <body>
+  <jsp:include page="../components/navbar.jsp"></jsp:include>
   <h1>Demandes pour ce trajet</h1>
 
   <table>

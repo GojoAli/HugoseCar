@@ -1,10 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" session="true" %>
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Page de session</title>
-</head>
+
+<jsp:include page="components/header.jsp">
+    <jsp:param name="pageTitle" value="Profil"/>
+</jsp:include>
+
 <body>
+    <jsp:include page="components/navbar.jsp"></jsp:include>
 <%
     // Récupération du nom d'utilisateur stocké dans la session
     String email = (String) session.getAttribute("email");

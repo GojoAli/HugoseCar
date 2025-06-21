@@ -4,17 +4,13 @@
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Gestion des trajets</title>
-  <style>
-    table { border-collapse: collapse; width: 90%; margin: auto; }
-    th, td { border: 1px solid #ccc; padding: 0.5em; }
-    .actions form { display: inline; }
-    .top { width: 90%; margin: auto; text-align: right; }
-  </style>
-</head>
+
+<jsp:include page="../components/header.jsp">
+    <jsp:param name="pageTitle" value="Liste des Trajets"/>
+</jsp:include>
+
 <body>
+  <jsp:include page="../components/navbar.jsp"></jsp:include>
   <h1 style="text-align:center;">Gestion des trajets</h1>
   <div class="top">
     <a href="trajet/createTrajet.jsp">Nouveau trajet</a>

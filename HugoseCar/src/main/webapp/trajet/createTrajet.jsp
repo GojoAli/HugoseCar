@@ -1,18 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Créer un trajet</title>
-  <style>
-    .error { color: red; margin-bottom: 1em; }
-    form { max-width: 500px; margin: auto; }
-    label { display: block; margin-top: 0.5em; }
-    input { width: 100%; padding: 0.4em; box-sizing: border-box; }
-    .actions { margin-top: 1em; }
-  </style>
-</head>
+  
+<jsp:include page="../components/header.jsp">
+    <jsp:param name="pageTitle" value="Création d'un Trajet"/>
+</jsp:include>
+
 <body>
+  <jsp:include page="../components/navbar.jsp"></jsp:include>
   <h1>Créer un trajet</h1>
 
   <% if (request.getAttribute("error") != null) { %>
