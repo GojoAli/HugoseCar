@@ -1,80 +1,184 @@
 package urca.dani.nico.servlets;
 
-import urca.dani.nico.dao.TrajetDAO;
-import urca.dani.nico.models.Trajet;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+
 import java.io.IOException;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+
 
 @WebServlet("/trajet")
 public class TrajetServlet extends HttpServlet {
-    private TrajetDAO dao;
+    private String urlDB, userDB, passDB;
 
     @Override
     public void init() throws ServletException {
-        String url = "jdbc:mysql://" + System.getenv("DB_HOST") + ":3306/" + System.getenv("DB_NAME") + "?serverTimezone=UTC";
-        dao = new TrajetDAO(url, System.getenv("DB_USER"), System.getenv("DB_PASSWORD"));
+        String host = System.getenv("DB_HOST");
+        String db   = System.getenv("DB_NAME");
+        String user = System.getenv("DB_USER");
+        String pass = System.getenv("DB_PASSWORD");
+        if (host==null||db==null||user==null||pass==null) {
+            throw new ServletException("Variables d'environnement manquantes : DB_HOST, DB_NAME, DB_USER, DB_PASSWORD");
+        }
+        urlDB  = "jdbc:mysql://" + host + ":3306/" + db + "?serverTimezone=UTC";
+        userDB = user;
+        passDB = pass;
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         String action = req.getParameter("action");
-
-        try {
-            if ("edit".equals(action)) {
-                int id = Integer.parseInt(req.getParameter("id"));
-                Trajet t = dao.findById(id);
-                req.setAttribute("trajet", t);
-                req.getRequestDispatcher("/WEB-INF/editTrajet.jsp").forward(req, resp);
-            } else {
-                List<Trajet> trajets = dao.findAll();
-                req.setAttribute("trajets", trajets);
-                req.getRequestDispatcher("/WEB-INF/trajetList.jsp").forward(req, resp);
-            }
-        } catch (SQLException e) {
-            throw new ServletException(e);
+        if ("edit".equals(action)) {
+            forwardEdit(req, resp);
+        } else {
+            forwardList(req, resp);
         }
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("action");
-
+    private void forwardList(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        List<Object[]> trajets = new ArrayList<>();
+        String sql = "SELECT * FROM trajet";
         try {
-            if ("delete".equals(action)) {
-                int id = Integer.parseInt(req.getParameter("id"));
-                dao.delete(id);
-            } else {
-                Trajet t = readTrajetFromRequest(req);
-                if ("update".equals(action)) {
-                    t.setId(Integer.parseInt(req.getParameter("id")));
-                    dao.update(t);
-                } else {
-                    dao.create(t);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            try (Connection conn = DriverManager.getConnection(urlDB, userDB, passDB);
+                 Statement st = conn.createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) {
+                    Object[] row = new Object[6];
+                    row[0] = rs.getInt("id");
+                    row[1] = rs.getInt("driver_id");
+                    row[2] = rs.getString("start_point");
+                    row[3] = rs.getString("end_point");
+                    row[4] = rs.getTimestamp("start_hour").toLocalDateTime();
+                    row[5] = rs.getInt("places_number");
+                    trajets.add(row);
                 }
             }
-            resp.sendRedirect(req.getContextPath() + "/trajet");
-        } catch (SQLException e) {
+            req.setAttribute("trajets", trajets);
+            req.getRequestDispatcher("/trajet/trajetList.jsp").forward(req, resp);
+        } catch (ClassNotFoundException | SQLException e) {
             throw new ServletException(e);
         }
     }
 
-    private Trajet readTrajetFromRequest(HttpServletRequest req) {
-        Trajet t = new Trajet();
-        t.setDriverId(Integer.parseInt(req.getParameter("driver_id")));
-        t.setStartPoint(req.getParameter("start_point"));
-        t.setEndPoint(req.getParameter("end_point"));
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-        t.setStartHour(LocalDateTime.parse(req.getParameter("start_hour"), fmt));
-        String end = req.getParameter("end_hour");
-        if (end != null && !end.isBlank()) t.setEndHour(LocalDateTime.parse(end, fmt));
-        t.setPlacesNumber(Integer.parseInt(req.getParameter("places_number")));
-        return t;
+    private void forwardEdit(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        String sql = "SELECT * FROM trajet WHERE id = ?";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            try (Connection conn = DriverManager.getConnection(urlDB, userDB, passDB);
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        Object[] row = new Object[6];
+                        row[0] = rs.getInt("id");
+                        row[1] = rs.getInt("driver_id");
+                        row[2] = rs.getString("start_point");
+                        row[3] = rs.getString("end_point");
+                        row[4] = rs.getTimestamp("start_hour").toLocalDateTime();
+                        row[5] = rs.getInt("places_number");
+                        req.setAttribute("trajet", row);
+                    }
+                }
+            }
+            req.getRequestDispatcher("/trajet/editTrajet.jsp").forward(req, resp);
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new ServletException(e);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        String action = req.getParameter("action");
+        try {
+            if ("delete".equals(action)) {
+                deleteTrajet(req);
+            } else if ("update".equals(action)) {
+                updateTrajet(req);
+            } else {
+                createTrajet(req);
+            }
+            resp.sendRedirect(req.getContextPath() + "/trajet");
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new ServletException(e);
+        }
+    }
+
+    private void createTrajet(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+        String sql = "INSERT INTO trajet(driver_id, start_point, end_point, start_hour, end_hour, places_number) VALUES(?,?,?,?,?,?)";
+        String start = req.getParameter("start_point");
+        String end = req.getParameter("end_point");
+        String startHr = req.getParameter("start_hour");
+        String endHr = req.getParameter("end_hour");
+        String places = req.getParameter("places_number");
+
+        String driverId = null;
+        Cookie[] cookies = req.getCookies();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if ("userId".equals(c.getName())) {
+                    driverId = c.getValue(); break;
+                }
+            }
+        }
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (Connection conn = DriverManager.getConnection(urlDB, userDB, passDB);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, Integer.parseInt(driverId));
+            ps.setString(2, start);
+            ps.setString(3, end);
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+            ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.parse(startHr, fmt)));
+            if (endHr != null && !endHr.isBlank()) ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.parse(endHr, fmt)));
+            else ps.setNull(5, Types.TIMESTAMP);
+            ps.setInt(6, Integer.parseInt(places));
+            ps.executeUpdate();
+        }
+    }
+
+    private void updateTrajet(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+        String sql = "UPDATE trajet SET start_point=?, end_point=?, start_hour=?, end_hour=?, places_number=? WHERE id=?";
+        int id = Integer.parseInt(req.getParameter("id"));
+        String start = req.getParameter("start_point");
+        String end = req.getParameter("end_point");
+        String startHr = req.getParameter("start_hour");
+        String endHr = req.getParameter("end_hour");
+        String places = req.getParameter("places_number");
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (Connection conn = DriverManager.getConnection(urlDB, userDB, passDB);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, start);
+            ps.setString(2, end);
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+            ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.parse(startHr, fmt)));
+            if (endHr != null && !endHr.isBlank()) ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.parse(endHr, fmt)));
+            else ps.setNull(4, Types.TIMESTAMP);
+            ps.setInt(5, Integer.parseInt(places));
+            ps.setInt(6, id);
+            ps.executeUpdate();
+        }
+    }
+
+    private void deleteTrajet(HttpServletRequest req) throws SQLException, ClassNotFoundException {
+        String sql = "DELETE FROM trajet WHERE id=?";
+        int id = Integer.parseInt(req.getParameter("id"));
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (Connection conn = DriverManager.getConnection(urlDB, userDB, passDB);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
     }
 }

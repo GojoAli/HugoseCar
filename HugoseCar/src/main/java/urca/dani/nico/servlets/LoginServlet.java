@@ -49,6 +49,17 @@ public class LoginServlet extends HttpServlet {
 
         if (authenticateByEmail(email, rawPassword)) {
             HttpSession session = request.getSession();
+
+
+            // Récupération de l'ID utilisateur
+            int userId = fetchUserIdByEmail(email);
+
+            // Création du cookie de connexion
+            Cookie cookie = new Cookie("userId", String.valueOf(userId));
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(7 * 24 * 3600); // 7 jours
+            response.addCookie(cookie);
+
             session.setAttribute("email", email);
             response.sendRedirect("sessionPage.jsp");
         } else {
@@ -79,5 +90,20 @@ public class LoginServlet extends HttpServlet {
             e.printStackTrace(); // à remplacer par un logger en prod
         }
         return false;
+    }
+
+
+        private int fetchUserIdByEmail(String email) {
+        String sql = "SELECT id FROM users WHERE email = ?";
+        try (Connection conn = DriverManager.getConnection(urlDB, userDB, passDB);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }

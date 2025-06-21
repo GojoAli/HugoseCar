@@ -1,36 +1,67 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="urca.dani.nico.models.Trajet" %>
-<%
-    Trajet t = (Trajet) request.getAttribute("trajet");
-%>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page import="java.time.LocalDateTime" %>
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Modifier un trajet</title>
+  <meta charset="UTF-8">
+  <title>Modifier un trajet</title>
+  <style>
+    .error { color: red; margin-bottom: 1em; }
+    form { max-width: 500px; margin: auto; }
+    label { display: block; margin-top: 0.5em; }
+    input { width: 100%; padding: 0.4em; box-sizing: border-box; }
+    .actions { margin-top: 1em; }
+  </style>
 </head>
 <body>
-<h1>Modifier le trajet</h1>
+  <h1 style="text-align:center;">Modifier le trajet</h1>
 
-<form method="post" action="trajet">
-    <input type="hidden" name="action" value="update">
-    <input type="hidden" name="id" value="<%= t.getId() %>">
+  <% if (request.getAttribute("error") != null) { %>
+    <div class="error"><%= request.getAttribute("error") %></div>
+  <% } %>
 
-    <label>Conducteur ID: <input type="number" name="driver_id" value="<%= t.getDriverId() %>" required></label><br>
-    <label>Départ: <input type="text" name="start_point" value="<%= t.getStartPoint() %>" required></label><br>
-    <label>Arrivée: <input type="text" name="end_point" value="<%= t.getEndPoint() %>" required></label><br>
-    <label>Heure de départ:
-        <input type="datetime-local" name="start_hour"
-               value="<%= t.getStartHour().toString().replace(" ", "T") %>" required>
-    </label><br>
-    <label>Heure d’arrivée:
-        <input type="datetime-local" name="end_hour"
-               value="<%= (t.getEndHour() != null) ? t.getEndHour().toString().replace(" ", "T") : "" %>">
-    </label><br>
-    <label>Places: <input type="number" name="places_number" value="<%= t.getPlacesNumber() %>" required></label><br>
+  <%
+    Object[] trajet = (Object[]) request.getAttribute("trajet");
+    int id = (Integer) trajet[0];
+    int driverId = (Integer) trajet[1];
+    String startPoint = (String) trajet[2];
+    String endPoint = (String) trajet[3];
+    LocalDateTime startHour = (LocalDateTime) trajet[4];
+    int placesNumber = (Integer) trajet[5];
+  %>
 
-    <input type="submit" value="Mettre à jour">
-</form>
+  <form action="<%= request.getContextPath() %>/trajet" method="post">
+    <input type="hidden" name="action" value="update" />
+    <input type="hidden" name="id" value="<%= id %>" />
 
-<a href="trajet">← Retour à la liste</a>
+    <label>Conducteur ID *</label>
+    <input type="number" name="driver_id" required
+           value="<%= request.getParameter("driver_id") != null ? request.getParameter("driver_id") : driverId %>" disabled />
+
+    <label>Point de départ *</label>
+    <input type="text" name="start_point" required
+           value="<%= request.getParameter("start_point") != null ? request.getParameter("start_point") : startPoint %>" />
+
+    <label>Point d'arrivée *</label>
+    <input type="text" name="end_point" required
+           value="<%= request.getParameter("end_point") != null ? request.getParameter("end_point") : endPoint %>" />
+
+    <label>Heure de départ *</label>
+    <input type="datetime-local" name="start_hour" required
+           value="<%= request.getParameter("start_hour") != null ? request.getParameter("start_hour") : startHour.toString().replace(' ', 'T') %>" />
+
+    <label>Heure d'arrivée</label>
+    <input type="datetime-local" name="end_hour"
+           value="<%= request.getParameter("end_hour") != null ? request.getParameter("end_hour") : "" %>" />
+
+    <label>Places disponibles *</label>
+    <input type="number" name="places_number" min="1" required
+           value="<%= request.getParameter("places_number") != null ? request.getParameter("places_number") : placesNumber %>" />
+
+    <div class="actions">
+      <button type="submit">Mettre à jour</button>
+      <a href="<%= request.getContextPath() %>/trajet">Annuler</a>
+    </div>
+  </form>
 </body>
 </html>

@@ -1,57 +1,66 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="urca.dani.nico.models.Trajet" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%
-    List<Trajet> trajets = (List<Trajet>) request.getAttribute("trajets");
-%>
+<%@ page import="java.time.LocalDateTime" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Liste des trajets</title>
+  <meta charset="UTF-8">
+  <title>Gestion des trajets</title>
+  <style>
+    table { border-collapse: collapse; width: 90%; margin: auto; }
+    th, td { border: 1px solid #ccc; padding: 0.5em; }
+    .actions form { display: inline; }
+    .top { width: 90%; margin: auto; text-align: right; }
+  </style>
 </head>
 <body>
-<h1>Liste des trajets</h1>
-
-<table border="1">
+  <h1 style="text-align:center;">Gestion des trajets</h1>
+  <div class="top">
+    <a href="trajet/createTrajet.jsp">Nouveau trajet</a>
+  </div>
+  <%
+    List<Object[]> trajets = (List<Object[]>) request.getAttribute("trajets");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+  %>
+  <table>
     <tr>
-        <th>ID</th>
-        <th>Départ</th>
-        <th>Arrivée</th>
-        <th>Date départ</th>
-        <th>Date arrivée</th>
-        <th>Places</th>
-        <th>Actions</th>
+      <th>ID</th><th>Conducteur</th><th>Départ</th><th>Arrivée</th><th>Heure de départ</th><th>Places</th><th>Actions</th>
     </tr>
-    <c:forEach var="t" items="${trajets}">
-        <tr>
-            <td>${t.id}</td>
-            <td>${t.startPoint}</td>
-            <td>${t.endPoint}</td>
-            <td>${t.startHour}</td>
-            <td>${t.endHour}</td>
-            <td>${t.placesNumber}</td>
-            <td>
-                <a href="trajet?action=edit&id=${t.id}">Modifier</a>
-                <form method="post" action="trajet" style="display:inline;">
-                    <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="id" value="${t.id}">
-                    <input type="submit" value="Supprimer">
-                </form>
-            </td>
-        </tr>
-    </c:forEach>
-</table>
+    <%
+      if (trajets != null && !trajets.isEmpty()) {
+        for (Object[] t : trajets) {
+    %>
+    <tr>
+      <td><%= t[0] %></td>
+      <td><%= t[1] %></td>
+      <td><%= t[2] %></td>
+      <td><%= t[3] %></td>
+      <td><%= ((LocalDateTime) t[4]).format(formatter) %></td>
+      <td><%= t[5] %></td>
+      <td class="actions">
+        <a href="<%=request.getContextPath()%>/trajet?action=edit&id=<%= t[0] %>">Modifier</a>
 
-<h2>Ajouter un trajet</h2>
-<form method="post" action="trajet">
-    <label>Conducteur ID: <input type="number" name="driver_id" required></label><br>
-    <label>Départ: <input type="text" name="start_point" required></label><br>
-    <label>Arrivée: <input type="text" name="end_point" required></label><br>
-    <label>Heure de départ: <input type="datetime-local" name="start_hour" required></label><br>
-    <label>Heure d’arrivée: <input type="datetime-local" name="end_hour"></label><br>
-    <label>Places: <input type="number" name="places_number" required></label><br>
-    <input type="submit" value="Créer">
-</form>
-
+        <form method="post" action="<%=request.getContextPath()%>/demande">
+          <input type="hidden" name="action" value="create"/>
+          <input type="hidden" name="trajet_id" value="<%= t[0] %>"/>  
+          <input type="submit" value="Faire une demande de trajet"/>
+        </form>
+        <a href="<%=request.getContextPath()%>/demande?trajet_id=<%= t[0] %>">List de demandes</a>
+     
+        <form method="post" action="<%=request.getContextPath()%>/trajet">
+          <input type="hidden" name="action" value="delete"/>
+          <input type="hidden" name="id" value="<%= t[0] %>"/>  
+          <input type="submit" value="Supprimer"/>
+        </form>
+      </td>
+    </tr>
+    <%
+        }
+      } else {
+    %>
+    <tr><td colspan="7" style="text-align:center;">Aucun trajet</td></tr>
+    <% } %>
+  </table>
 </body>
 </html>

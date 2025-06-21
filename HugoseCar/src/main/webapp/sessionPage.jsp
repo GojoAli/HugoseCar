@@ -21,8 +21,11 @@
     }
 %>
 
-<p><a href="trajet/editTrajet.jsp">Modifier un trajet</a></p>
-<p><a href="trajet/trajetList.jsp">Voir les trajets</a></p>
-
+  <div class="nav">
+    <a href="<%= request.getContextPath() %>/trajet">Voir la liste des trajets</a>
+    <a href="<%= request.getContextPath() %>/trajet?action=create">Créer un trajet</a>
+    <a href="<%= request.getContextPath() %>/logout">Déconnexion</a>
+  </div>
+  
 </body>
 </html>
