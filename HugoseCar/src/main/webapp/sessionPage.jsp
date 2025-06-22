@@ -27,8 +27,7 @@
         %>
 
         <div class="container options">
-            <a href="<%= request.getContextPath() %>/trajet">Voir la liste des trajets</a>
-            <a href="<%= request.getContextPath() %>/trajet?action=create">Créer un trajet</a>
+            <a href="<%= request.getContextPath() %>/trajet">Voir la liste des trajets</a>    
         </div>
 
     </div>

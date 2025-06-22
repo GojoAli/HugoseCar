@@ -42,31 +42,38 @@ public class TrajetServlet extends HttpServlet {
     }
 
     private void forwardList(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        List<Object[]> trajets = new ArrayList<>();
-        String sql = "SELECT * FROM trajet";
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            try (Connection conn = DriverManager.getConnection(urlDB, userDB, passDB);
-                 Statement st = conn.createStatement();
-                 ResultSet rs = st.executeQuery(sql)) {
-                while (rs.next()) {
-                    Object[] row = new Object[6];
-                    row[0] = rs.getInt("id");
-                    row[1] = rs.getInt("driver_id");
-                    row[2] = rs.getString("start_point");
-                    row[3] = rs.getString("end_point");
-                    row[4] = rs.getTimestamp("start_hour").toLocalDateTime();
-                    row[5] = rs.getInt("places_number");
-                    trajets.add(row);
-                }
+        throws ServletException, IOException {
+    List<Object[]> trajets = new ArrayList<>();
+    // On joint users pour récupérer name
+    String sql = "SELECT t.id, t.driver_id, u.name AS driver_name, "
+               + "t.start_point, t.end_point, t.start_hour, t.places_number "
+               + "FROM trajet t "
+               + "JOIN users u ON t.driver_id = u.id";
+
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (Connection conn = DriverManager.getConnection(urlDB, userDB, passDB);
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                Object[] row = new Object[7];
+                row[0] = rs.getInt("id");
+                row[1] = rs.getInt("driver_id");
+                row[2] = rs.getString("driver_name");    
+                row[3] = rs.getString("start_point");
+                row[4] = rs.getString("end_point");
+                row[5] = rs.getTimestamp("start_hour").toLocalDateTime();
+                row[6] = rs.getInt("places_number");
+                trajets.add(row);
             }
-            req.setAttribute("trajets", trajets);
-            req.getRequestDispatcher("/trajet/trajetList.jsp").forward(req, resp);
-        } catch (ClassNotFoundException | SQLException e) {
-            throw new ServletException(e);
         }
+        req.setAttribute("trajets", trajets);
+        req.getRequestDispatcher("/trajet/trajetList.jsp").forward(req, resp);
+    } catch (ClassNotFoundException | SQLException e) {
+        throw new ServletException(e);
     }
+}
+
 
     private void forwardEdit(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

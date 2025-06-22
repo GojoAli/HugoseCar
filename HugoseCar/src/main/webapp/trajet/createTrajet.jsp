@@ -11,14 +11,6 @@
     <div id="page-content">
         <h1>Créer un trajet</h1>
 
-        <% if (request.getAttribute("error") != null) { %>
-            <div class="error"><%= request.getAttribute("error") %></div>
-        <% }
-        else {%>
-            <div> you you <%= request.getAttribute("error") %> </div>
-        <% 
-            }
-        %>
 
         <form action="<%= request.getContextPath() %>/trajet/create" method="post" class="container">
             <div class="input_container">

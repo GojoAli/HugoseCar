@@ -79,9 +79,9 @@ public class CreateTrajetServlet extends HttpServlet {
 
                 ps.setInt(6, Integer.parseInt(places));
                 ps.executeUpdate();
-                request.setAttribute("error", "ça marche.");
+                request.setAttribute("succes", "trajet crée");
                 //response.sendRedirect(request.getContextPath() + "/trajet/createTrajet.jsp");
-                request.getRequestDispatcher("/trajet/createTrajet.jsp").forward(request, response);
+                request.getRequestDispatcher("/trajet/trajetList.jsp").forward(request, response);
                 return;
             }
         } catch (ClassNotFoundException | SQLException e) {
