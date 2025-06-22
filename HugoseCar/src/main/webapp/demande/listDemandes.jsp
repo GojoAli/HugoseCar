@@ -4,65 +4,63 @@
 
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Demandes de trajet</title>
-  <style>
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background-color: #f4f4f4; }
-    .actions form { display: inline; }
-  </style>
-</head>
+
+<jsp:include page="../components/header.jsp">
+    <jsp:param name="pageTitle" value="Demandes de Trajet"/>
+</jsp:include>
+
 <body>
-  <h1>Demandes pour ce trajet</h1>
+    <jsp:include page="../components/navbar.jsp"></jsp:include>
+    <div id="page-content">
+        <h1>Demandes pour ce trajet</h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Demandeur</th>
-        <th>Message</th>
-        <th>Statut</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <%
-        List<Object[]> demandes = (List<Object[]>) request.getAttribute("demandes");
-        if (demandes != null && !demandes.isEmpty()) {
-          for (Object[] d : demandes) {
-            int id = (int) d[0];
-            String name = (String) d[1];
-            String message = (String) d[2];
-            String statut = (String) d[3];
-      %>
-      <tr>
-        <td><%= name %></td>
-        <td><%= message %></td>
-        <td><%= statut %></td>
-        <td class="actions">
-          <% if ("EN_ATTENTE".equals(statut)) { %>
-            <form method="post" action="<%= request.getContextPath() %>/demande">
-              <input type="hidden" name="action" value="updateStatut"/>
-              <input type="hidden" name="demande_id" value="<%= id %>"/>
-              <input type="hidden" name="statut" value="ACCEPTE"/>
-              <button type="submit">Accepter</button>
-            </form>
-            <form method="post" action="<%= request.getContextPath() %>/demande">
-              <input type="hidden" name="action" value="updateStatut"/>
-              <input type="hidden" name="demande_id" value="<%= id %>"/>
-              <input type="hidden" name="statut" value="REFUSE"/>
-              <button type="submit">Refuser</button>
-            </form>
-          <% } %>
-        </td>
-      </tr>
-      <% }} else { %>
-      <tr><td colspan="4">Aucune demande trouvée.</td></tr>
-      <% } %>
-    </tbody>
-  </table>
+        <table class="container">
+            <thead>
+            <tr>
+                <th>Demandeur</th>
+                <th>Message</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%
+                List<Object[]> demandes = (List<Object[]>) request.getAttribute("demandes");
+                if (demandes != null && !demandes.isEmpty()) {
+                for (Object[] d : demandes) {
+                    int id = (int) d[0];
+                    String name = (String) d[1];
+                    String message = (String) d[2];
+                    String statut = (String) d[3];
+            %>
+            <tr>
+                <td><%= name %></td>
+                <td><%= message %></td>
+                <td><%= statut %></td>
+                <td class="actions">
+                <% if ("EN_ATTENTE".equals(statut)) { %>
+                    <form method="post" action="<%= request.getContextPath() %>/demande">
+                    <input type="hidden" name="action" value="updateStatut"/>
+                    <input type="hidden" name="demande_id" value="<%= id %>"/>
+                    <input type="hidden" name="statut" value="ACCEPTE"/>
+                    <button type="submit">Accepter</button>
+                    </form>
+                    <form method="post" action="<%= request.getContextPath() %>/demande">
+                    <input type="hidden" name="action" value="updateStatut"/>
+                    <input type="hidden" name="demande_id" value="<%= id %>"/>
+                    <input type="hidden" name="statut" value="REFUSE"/>
+                    <button type="submit">Refuser</button>
+                    </form>
+                <% } %>
+                </td>
+            </tr>
+            <% }} else { %>
+            <tr><td colspan="4">Aucune demande trouvée.</td></tr>
+            <% } %>
+            </tbody>
+        </table>
 
-  <p><a href="<%= request.getContextPath() %>/trajet">← Retour à la liste des trajets</a></p>
+        <p><a href="<%= request.getContextPath() %>/trajet">← Retour à la liste des trajets</a></p>
+    </div>
 </body>
 </html>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d931d1f5-24ae-40a8-8d26-25de9d6876e8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/HugoseCar/src/main/java/urca/dani/nico/servlets/LoginServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/HugoseCar/src/main/java/urca/dani/nico/servlets/LoginServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HugoseCar/src/main/java/urca/dani/nico/servlets/demande/DemandeTrajetServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/HugoseCar/src/main/java/urca/dani/nico/servlets/demande/DemandeTrajetServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HugoseCar/src/main/java/urca/dani/nico/servlets/trajet/CreateTrajetServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/HugoseCar/src/main/java/urca/dani/nico/servlets/trajet/CreateTrajetServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HugoseCar/src/main/java/urca/dani/nico/servlets/trajet/TrajetServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/HugoseCar/src/main/java/urca/dani/nico/servlets/trajet/TrajetServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HugoseCar/src/main/webapp/base.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/HugoseCar/src/main/webapp/base.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HugoseCar/src/main/webapp/components/header.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/HugoseCar/src/main/webapp/components/header.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HugoseCar/src/main/webapp/components/navbar.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/HugoseCar/src/main/webapp/components/navbar.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HugoseCar/src/main/webapp/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/HugoseCar/src/main/webapp/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HugoseCar/src/main/webapp/demande/listDemandes.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/HugoseCar/src/main/webapp/demande/listDemandes.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HugoseCar/src/main/webapp/sessionPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/HugoseCar/src/main/webapp/sessionPage.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HugoseCar/src/main/webapp/trajet/createTrajet.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/HugoseCar/src/main/webapp/trajet/createTrajet.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HugoseCar/src/main/webapp/trajet/editTrajet.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/HugoseCar/src/main/webapp/trajet/editTrajet.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HugoseCar/src/main/webapp/trajet/trajetList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/HugoseCar/src/main/webapp/trajet/trajetList.jsp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="2yrhmYJV8tlXSFJAgLu25s5saFP" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "//wsl.localhost/Ubuntu/home/niixoz/hugosecar/HugoseCar/HugoseCar"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d931d1f5-24ae-40a8-8d26-25de9d6876e8" name="Changes" comment="" />
+      <created>1750598758954</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1750598758954</updated>
+    </task>
+    <servers />
+  </component>
+</project>

@@ -13,6 +13,5 @@
             Bienvenue sur HugoseCar, la meilleure plateforme de covoiturage au monde !
         </div>
     </div>
-    
 </body>
 </html>
