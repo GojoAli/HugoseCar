@@ -1,27 +1,27 @@
-# Étape de build : compile l'application Java en WAR avec Maven
- # Maven 3.9 avec JDK 17 (Eclipse Temurin)
+# 1er étape: Build de l'application avec Maven
 FROM maven:3.9.4-eclipse-temurin-17 AS builder
+
 WORKDIR /app
 
-# Copier les fichiers de configuration Maven et télécharger les dépendances en avance
+# Copie des fichiers de configuration Maven
 COPY pom.xml . 
-# Pré-télécharge les dépendances Maven pour accélérer la compilation
+
+# Pré-téléchargement des dépendances Maven
 RUN mvn dependency:go-offline -B
 
-# Copier le code source de l'application et compiler le WAR
+# Copie du code source
 COPY src ./src
-# Compile le projet et génère le WAR dans target/ (tests ignorés pour gagner du temps)
+
+# Compilation du projet Maven et création du fichier WAR
 RUN mvn package -DskipTests -B  
 
-# Étape finale : image d'exécution avec Tomcat 10 (Jakarta EE 10) sur JDK 17
-# Tomcat 10.1.x + Java 17 (dernière version compatible Jakarta EE 10)
+# 2nd étape : Exécution de l'application avec Tomcat
 FROM tomcat:10.1.41-jdk17-temurin 
+
 WORKDIR /usr/local/tomcat
 
-# Copier le WAR construit depuis l'étape Maven dans le dossier de déploiement de Tomcat
+# Copie du WAR depuis l'étape Maven dans le dossier de déploiement de Tomcat
 COPY --from=builder /app/target/HugoseCar.war ./webapps/HugoseCar.war
 
-# Exposer le port HTTP de Tomcat (8080)
+# Expose le port HTTP de Tomcat (8080)
 EXPOSE 8080
-
-# Commande de démarrage par défaut (héritée de l'image Tomcat, lance catalina.sh run)
