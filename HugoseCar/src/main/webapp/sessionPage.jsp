@@ -8,27 +8,30 @@
 
 <body>
     <jsp:include page="components/navbar.jsp"></jsp:include>
-<%
-    // Récupération du nom d'utilisateur stocké dans la session
-    String email = (String) session.getAttribute("email");
-    if(email != null) {
-%>
-    <h1>Bonjour!</h1>
-    <p>Vous êtes connecté.</p>
-<%
-    } else {
-%>
-    <h1>Accès non autorisé</h1>
-    <p>Veuillez vous connecter <a href="login.jsp">ici</a>.</p>
-<%
-    }
-%>
+    <div id="page-content">
+        <%
+            // Récupération du nom d'utilisateur stocké dans la session
+            String email = (String) session.getAttribute("email");
+            if(email != null) {
+        %>
+            <h1>Bonjour!</h1>
+            <p>Vous êtes connecté.</p>
+        <%
+            } else {
+        %>
+            <h1>Accès non autorisé</h1>
+            <p>Veuillez vous connecter <a href="login.jsp">ici</a>.</p>
+        <%
+            }
+        %>
 
-  <div class="nav">
-    <a href="<%= request.getContextPath() %>/trajet">Voir la liste des trajets</a>
-    <a href="<%= request.getContextPath() %>/trajet?action=create">Créer un trajet</a>
-    <a href="<%= request.getContextPath() %>/logout">Déconnexion</a>
-  </div>
-  
+        <div class="nav">
+            <a href="<%= request.getContextPath() %>/trajet">Voir la liste des trajets</a>
+            <a href="<%= request.getContextPath() %>/trajet?action=create">Créer un trajet</a>
+            <a href="<%= request.getContextPath() %>/logout">Déconnexion</a>
+        </div>
+
+    </div>
+
 </body>
 </html>
