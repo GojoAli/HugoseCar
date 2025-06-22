@@ -6,5 +6,5 @@
 <head>
     <meta charset="UTF-8">
     <title>HugoseCar - <%= pageTitle %></title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
 </head>

@@ -12,9 +12,10 @@
         <%
             // Récupération du nom d'utilisateur stocké dans la session
             String email = (String) session.getAttribute("email");
+            String name = (String) session.getAttribute("name");
             if(email != null) {
         %>
-            <h1>Bonjour!</h1>
+            <h1>Bonjour <%= name %> !</h1>
             <p>Vous êtes connecté.</p>
         <%
             } else {
@@ -25,10 +26,9 @@
             }
         %>
 
-        <div class="nav">
+        <div class="container options">
             <a href="<%= request.getContextPath() %>/trajet">Voir la liste des trajets</a>
             <a href="<%= request.getContextPath() %>/trajet?action=create">Créer un trajet</a>
-            <a href="<%= request.getContextPath() %>/logout">Déconnexion</a>
         </div>
 
     </div>

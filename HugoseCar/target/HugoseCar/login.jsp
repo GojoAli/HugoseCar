@@ -14,7 +14,7 @@
         <label for="password">Mot de passe :</label>
         <input type="password" name="password" id="password" required>
         <br/>
-        <input type="submit" value="Se connecter">
+        <input type="submit" class="skew_button_blue" value="Se connecter">
     </form>
     <%
         // Affichage d'un message d'erreur si les identifiants sont incorrects

@@ -125,9 +125,17 @@ form {
 }
 .error { color: red; margin-bottom: 1em; }
 .actions { margin-top: 1em; }
-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+table { 
+    width: 100%;
+    border-collapse: collapse; 
+    margin-top: 20px; 
+    border-radius: 8px;
+    background-color: var(--container_background);
+}
+tr {
+    width: 100%;
+}
 th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-th { background-color: #f4f4f4; }
 .actions form { display: inline; }
 
 
@@ -139,7 +147,7 @@ th { background-color: #f4f4f4; }
 }
 
 
-input[type="text"], input[type="tel"], input[type="password"], input[type="email"], select, textarea {
+input[type="text"], input[type="number"], input[type="datetime-local"], input[type="tel"], input[type="password"], input[type="email"], select, textarea {
     display: flex !important;
     padding: 16px !important;
     align-items: center !important;
@@ -165,7 +173,7 @@ input::placeholder {
     color: var(--light_text);
 }
 
-input[type="text"]:focus, input[type="tel"]:focus, input[type="password"]:focus, input[type="email"]:focus {
+input[type="text"]:focus, input[type="number"]:focus, input[type="datetime-local"]:focus, input[type="tel"]:focus, input[type="password"]:focus, input[type="email"]:focus {
     border: solid 1px var(--container_stroke_color);
     /*box-shadow: 0 0 16px rgba(0,0,0,0.25);*/
     box-shadow: none;
@@ -326,4 +334,54 @@ input[type="range"]:focus::-moz-range-thumb {
 }
 .skew_button_blue:hover .filter_skew_button_blue {
     filter: none;
+}
+
+.skew_button_red {
+    font-size: 16px;
+    font-weight: 600;
+    background: #f88474;
+    color: #61130f;
+    transform: skew(-12deg);
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+    padding: 8px 16px;
+}
+.skew_button_red:hover {
+    background: #A42F2F;
+    color: #FFFFFF;
+    transform: skew(-12deg);
+}
+
+.inactive.skew_button_red {
+    background: #FFB9B9;
+    color: #d3635d;
+}
+
+.skew_button_green {
+    font-size: 16px;
+    font-weight: 600;
+    background: #74f891;
+    color: #0f610f;
+    transform: skew(-12deg);
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+    padding: 8px 16px;
+}
+.skew_button_green:hover {
+    background: #2fa43f;
+    color: #FFFFFF;
+    transform: skew(-12deg);
+}
+
+.inactive.skew_button_green {
+    background: #cdffb9;
+    color: #5dd363;
+}
+
+.options {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: center;
+    justify-content: center;
 }
